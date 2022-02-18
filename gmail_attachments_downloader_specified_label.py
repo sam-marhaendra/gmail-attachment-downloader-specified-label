@@ -3,13 +3,13 @@ import base64
 import os
 import email
 
-email_user = "YOUR_EMAIL"
+email_username = "YOUR_EMAIL"
 email_pass = "YOUR_PASSWORD"
 
 mail = imaplib.IMAP4_SSL("imap.gmail.com")
-mail.login(email_user, email_pass)
+mail.login(email_username, email_pass)
 
-mail.select('LABEL_NAME')
+mail.select("LABEL_NAME")
 
 type, data = mail.search(None, 'ALL')
 mail_ids = data[0]
@@ -18,12 +18,13 @@ id_list = mail_ids.split()
 for num in data[0].split():
     typ, data = mail.fetch(num, '(RFC822)' )
     raw_email = data[0][1]
-# converts byte literal to string removing b''
+    
+    # converts byte literal to string removing b''
     raw_email_string = raw_email.decode('utf-8')
     email_message = email.message_from_string(raw_email_string)
-# downloading attachments
+    
+    # downloading attachments
     for part in email_message.walk():
-        # this part comes from the snipped I don't understand yet... 
         if part.get_content_maintype() == 'multipart':
             continue
         if part.get('Content-Disposition') is None:
